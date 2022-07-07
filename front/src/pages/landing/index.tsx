@@ -19,6 +19,7 @@ import SearchIcon from "assets/images/ic_busca.svg";
 import Switch from "components/switch";
 import HeroIcon from "assets/images/ic_heroi.svg";
 import SwitchHeart from "components/switchHeart";
+import Footer from "components/footer";
 
 const Landing: React.FC = () => {
   // States
@@ -85,6 +86,7 @@ const Landing: React.FC = () => {
           />
         ))}
       </HeroesList>
+      <Footer />
     </LandingWrapper>
   );
 };

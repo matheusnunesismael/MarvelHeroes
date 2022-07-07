@@ -2,6 +2,11 @@ import styled from "styled-components";
 
 export const HeroWrapper = styled.div`
   width: 200px;
+  cursor: pointer;
+  :hover {
+    background-color: #fdecec;
+    box-shadow: 0px 0px 0px 10px #fdecec;
+  }
   .hero-image {
     img {
       border-bottom: 5px solid #e92429;

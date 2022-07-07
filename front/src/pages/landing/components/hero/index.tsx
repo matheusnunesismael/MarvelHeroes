@@ -1,6 +1,7 @@
 import SwitchHeart from "components/switchHeart";
 import React from "react";
 
+// Styles
 import { HeroWrapper } from "./styles";
 
 interface HeroProps {

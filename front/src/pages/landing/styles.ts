@@ -110,6 +110,7 @@ export const SearchOptions = styled.div`
 
 export const HeroesList = styled.div`
   margin-top: 0.8rem;
+  margin-bottom: 2rem;
   padding: 0 6rem;
 
   display: flex;
