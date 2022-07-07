@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { SwitchWrapper } from "./styles";
 
@@ -8,7 +8,6 @@ interface SwitchProps {
 }
 
 const Switch: React.FC<SwitchProps> = (props: SwitchProps) => {
-  const [checked, setChecked] = useState(false);
   return (
     <SwitchWrapper
       isActive={props.value}

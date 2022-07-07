@@ -30,7 +30,7 @@ export const LandingHeader = styled.header`
 
 export const LandingLogo = styled.div`
   display: flex;
-  width: 326px;
+  width: 335px;
   align-items: end;
   font-weight: bold;
   color: #434343;
@@ -74,6 +74,45 @@ export const LandingSearch = styled.div`
 
 export const SearchOptions = styled.div`
   display: flex;
-  justify-content: center;
+  padding: 0 6rem;
+  justify-content: space-between;
   margin-top: 1.5rem;
+  font-size: 0.9rem;
+  .total-results {
+    display: flex;
+    align-items: center;
+    color: #b9b9b9;
+    font-weight: bold;
+  }
+  .filters {
+    display: flex;
+    gap: 1rem;
+    .filter-lex {
+      display: flex;
+      gap: 0.5rem;
+      .filter-lex-text {
+        color: #fa7c7c;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+    .filter-fav {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      span {
+        color: #fa7c7c;
+      }
+    }
+  }
+`;
+
+export const HeroesList = styled.div`
+  margin-top: 0.8rem;
+  padding: 0 6rem;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.65rem;
 `;

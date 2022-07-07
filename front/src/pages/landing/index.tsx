@@ -7,20 +7,27 @@ import {
   LandingLogo,
   LandingSearch,
   SearchOptions,
+  HeroesList,
 } from "./styles";
 
 // Components
+import Hero from "./components/hero";
 
 // Assets
 import Logo from "assets/images/logo.svg";
 import SearchIcon from "assets/images/ic_busca.svg";
 import Switch from "components/switch";
+import HeroIcon from "assets/images/ic_heroi.svg";
+import SwitchHeart from "components/switchHeart";
 
 const Landing: React.FC = () => {
   // States
-  const [search, setSearch] = useState("");
+  const [heroes, setHeroes] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
 
   // Params
+  const [search, setSearch] = useState("");
   const [onlyFavorites, setOnlyFavorites] = useState(false);
   const [lexOrder, setLexOrder] = useState(false);
 
@@ -29,7 +36,7 @@ const Landing: React.FC = () => {
       <LandingHeader>
         <LandingLogo>
           <img src={Logo} alt="Marvel Heroes" />
-          <div className="text">Search heros</div>
+          <div className="text">Search heroes</div>
         </LandingLogo>
         <div className="titles">
           <h1>EXPLORE O UNIVERSO</h1>
@@ -52,9 +59,32 @@ const Landing: React.FC = () => {
         </label>
       </LandingSearch>
       <SearchOptions>
-        {lexOrder}
-        <Switch value={lexOrder} setValue={setLexOrder} />
+        <div className="total-results">Encontrados {total} heróis</div>
+        <div className="filters">
+          <div className="filter-lex">
+            <div className="filter-lex-text">
+              <img src={HeroIcon} alt="hero" />
+              <span>Ordenar por nome - A/Z</span>
+            </div>
+
+            <Switch value={lexOrder} setValue={setLexOrder} />
+          </div>
+          <div className="filter-fav">
+            <SwitchHeart value={onlyFavorites} setValue={setOnlyFavorites} />
+            <span>Somente favoritos</span>
+          </div>
+        </div>
       </SearchOptions>
+      <HeroesList>
+        {Array.from({ length: 20 }, (_, i) => (
+          <Hero
+            id={1011334}
+            name="3-D Man"
+            image="http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784.jpg"
+            favorite={false}
+          />
+        ))}
+      </HeroesList>
     </LandingWrapper>
   );
 };
