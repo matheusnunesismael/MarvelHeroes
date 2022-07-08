@@ -9,7 +9,7 @@ export const SearchBarWrapper = styled.div`
     align-items: center;
     font-size: 0.8rem;
     font-weight: bold;
-    color: #575a57;
+    color: #545654;
     img {
       width: 100px;
     }
@@ -32,7 +32,14 @@ export const SearchInput = styled.label`
   padding: 0 20px;
   border-radius: 30px;
   cursor: text;
+  img {
+    width: 20px;
+  }
   input {
+    padding: 0;
+    display: flex;
+    justify-content: left;
+    align-items: center;
     height: 100%;
     padding: 0;
     width: 90%;
