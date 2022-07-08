@@ -5,10 +5,6 @@ export const HeroViewWrapper = styled.div`
   min-height: auto;
   background-color: #e6f5e6;
   z-index: -1;
-  .hero-details {
-  }
-  .hero-comics {
-  }
 `;
 
 export const HeroDetails = styled.div`

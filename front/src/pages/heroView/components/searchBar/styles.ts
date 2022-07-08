@@ -5,6 +5,7 @@ export const SearchBarWrapper = styled.div`
   padding: 1rem 3rem;
   gap: 10%;
   .logo {
+    text-decoration: none;
     display: flex;
     align-items: center;
     font-size: 0.8rem;

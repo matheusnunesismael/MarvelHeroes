@@ -77,7 +77,7 @@ const Landing: React.FC = () => {
         </div>
       </SearchOptions>
       <HeroesList>
-        {Array.from({ length: 20 }, (_, i) => (
+        {Array.from({ length: 17 }, (_, i) => (
           <Hero
             id={1011334}
             name="3-D Man"

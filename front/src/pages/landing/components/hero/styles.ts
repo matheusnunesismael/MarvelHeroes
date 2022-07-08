@@ -3,6 +3,9 @@ import styled from "styled-components";
 export const HeroWrapper = styled.div`
   width: 200px;
   cursor: pointer;
+  a {
+    text-decoration: none;
+  }
   :hover {
     background-color: #fdecec;
     box-shadow: 0px 0px 0px 10px #fdecec;
