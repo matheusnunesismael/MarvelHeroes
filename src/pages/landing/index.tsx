@@ -48,6 +48,9 @@ const Landing: React.FC = () => {
     (async () => {
       API({
         path: "characters",
+        params: {
+          orderBy: "name",
+        },
       }).then(({ data }) => {
         console.log(data.data.results);
         setHeroes(data.data.results);

@@ -25,7 +25,7 @@ const HeroView: React.FC = () => {
     name: "HERO",
     description: "No information about this character yet",
     comics: "000",
-    movies: "000",
+    movies: "0",
     image:
       "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg",
   };
@@ -33,12 +33,34 @@ const HeroView: React.FC = () => {
   // States
   const [comics, setComics] = useState<Comic[]>([]);
   const [hero, setHero] = useState({} as any);
+  const [lastComicDate, setLastComicDate] = useState("");
 
   const { selectedHero } = useHeroesContext();
 
   useEffect(() => {
-    API({ path: `characters/${id}/comics` }).then(({ data }) => {
+    window.scrollTo(0, 0);
+    API({
+      path: `characters/${id}/comics`,
+      params: {
+        limit: 10,
+        page: 0,
+      },
+    }).then(({ data }) => {
       setComics(data.data.results);
+      if (data.data.results[0]) {
+        const date = new Date(data.data.results[0].dates[0].date);
+        const formattedDate = date
+          .toLocaleDateString("pt-BR", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          })
+          .replace(/ /g, " ")
+          .replace(/de /g, "");
+        setLastComicDate(formattedDate);
+        return;
+      }
+      setLastComicDate("none so far");
     });
   }, [id]);
 
@@ -50,6 +72,9 @@ const HeroView: React.FC = () => {
     }
     API({
       path: `characters/${id}`,
+      params: {
+        orderBy: "onsaleDate",
+      },
     })
       .then(({ data }) => {
         console.log(data);
@@ -108,7 +133,7 @@ const HeroView: React.FC = () => {
                   <div className="hero-last-comic">
                     <span className="last-comic-text">Ultimo quadrinho:</span>
 
-                    <span className="last-comic-value">17 jul. 2020</span>
+                    <span className="last-comic-value">{lastComicDate}</span>
                   </div>
                 </div>
               </div>
@@ -129,15 +154,6 @@ const HeroView: React.FC = () => {
       <HeroComics>
         <div className="hero-comics-title">Últimos lançamentos</div>
         <div className="hero-comics-list">
-          {
-            // render 10 comics for placeholder
-            Array.from({ length: 10 }, (_, index) => (
-              <ComicComponent
-                name="Avengers: The Initiative (2007) #19"
-                image="http://i.annihil.us/u/prod/marvel/i/mg/d/03/58dd080719806.jpg"
-              />
-            ))
-          }
           {comics.map((comic) => (
             <ComicComponent
               name={comic.title}

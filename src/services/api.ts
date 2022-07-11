@@ -2,8 +2,9 @@ import axios from "axios";
 
 interface APIparams {
   search?: string;
-  order?: boolean;
+  orderBy?: string;
   page?: number;
+  limit?: number;
 }
 
 interface RequestParams {
@@ -18,11 +19,14 @@ export function API(parameters: RequestParams) {
     if (parameters.params.search) {
       url += `nameStartsWith=${parameters.params.search}`;
     }
-    if (parameters.params.order) {
-      url += `&orderBy=name`;
+    if (parameters.params.orderBy) {
+      url += `&orderBy=${parameters.params.orderBy}`;
     }
     if (parameters.params.page) {
-      url += `&offset=${parameters.params.page}&limit=20`;
+      url += `&offset=${parameters.params.page}`;
+    }
+    if (parameters.params.limit) {
+      url += `&limit=${parameters.params.limit}`;
     }
   }
   return axios.get(url);
