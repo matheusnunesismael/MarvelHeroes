@@ -39,7 +39,7 @@ export const LandingLogo = styled.div`
   }
 `;
 
-export const LandingSearch = styled.div`
+export const LandingSearch = styled.form`
   display: flex;
   justify-content: center;
   margin-top: 1.5rem;
@@ -54,8 +54,18 @@ export const LandingSearch = styled.div`
     gap: 30px;
     padding: 0 20px;
     border-radius: 30px;
-    cursor: text;
+    button {
+      border: none;
+      background-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .search-button {
+        cursor: pointer;
+      }
+    }
     input {
+      cursor: text;
       height: 100%;
       padding: 0;
       width: 90%;
@@ -76,7 +86,7 @@ export const SearchOptions = styled.div`
   display: flex;
   padding: 0 6rem;
   justify-content: space-between;
-  margin-top: 1.5rem;
+  margin: 1.5rem 0 1.5rem 0;
   font-size: 0.9rem;
   .total-results {
     display: flex;
