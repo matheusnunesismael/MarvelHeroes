@@ -17,10 +17,15 @@ import Footer from "components/footer";
 import { useHeroesContext } from "contexts/heroes";
 import { API } from "services/api";
 import { Comic } from "types/comics";
+import { motion, useSpring } from "framer-motion";
 
 const HeroView: React.FC = () => {
   const params = useParams();
   const { id } = params;
+  const spring = useSpring(0, { damping: 300, stiffness: 200 });
+  const [favorite, setFavorite] = useState(false);
+
+  // Placeholder values
   const HeroPlaceholder = {
     name: "HERO",
     description: "No information about this character yet",
@@ -37,13 +42,28 @@ const HeroView: React.FC = () => {
 
   const { selectedHero } = useHeroesContext();
 
+  const getFavorite = async (id: number) => {
+    return await localStorage.getItem(`mf-${id}`);
+  };
+
+  function favoriteCharacter(value: boolean) {
+    setFavorite(value);
+    localStorage.setItem(`mf-${id}`, `${value}`);
+  }
+
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Scrool to top
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
     API({
       path: `characters/${id}/comics`,
       params: {
         limit: 10,
         page: 0,
+        orderBy: "onsaleDate",
       },
     }).then(({ data }) => {
       setComics(data.data.results);
@@ -65,19 +85,17 @@ const HeroView: React.FC = () => {
   }, [id]);
 
   useEffect(() => {
-    console.log("update hero");
+    getFavorite(parseInt(id || "0")).then((res) => {
+      setFavorite(res === "true");
+    });
     if (selectedHero) {
       setHero(selectedHero);
       return;
     }
     API({
       path: `characters/${id}`,
-      params: {
-        orderBy: "onsaleDate",
-      },
     })
       .then(({ data }) => {
-        console.log(data);
         setHero(data.data.results[0]);
       })
       .catch((error) => {
@@ -101,7 +119,11 @@ const HeroView: React.FC = () => {
                     {(hero.name || HeroPlaceholder.name).toUpperCase()}
                   </div>
                   <div className="hero-favorite">
-                    <SwitchHeart value={true} size={35} />
+                    <SwitchHeart
+                      value={favorite}
+                      setValue={favoriteCharacter}
+                      size={35}
+                    />
                   </div>
                 </div>
                 <div className="hero-description">
@@ -138,13 +160,14 @@ const HeroView: React.FC = () => {
                 </div>
               </div>
               <div className="hero-image">
-                <img
+                <motion.img
                   src={
                     hero.thumbnail
                       ? `${hero.thumbnail.path}.${hero.thumbnail.extension}`
                       : HeroPlaceholder.image
                   }
                   alt={hero.name || HeroPlaceholder.name}
+                  layoutId="hero-image"
                 />
               </div>
             </div>
@@ -156,6 +179,7 @@ const HeroView: React.FC = () => {
         <div className="hero-comics-list">
           {comics.map((comic) => (
             <ComicComponent
+              key={comic.id}
               name={comic.title}
               image={comic.thumbnail.path + "." + comic.thumbnail.extension}
             />

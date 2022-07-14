@@ -23,46 +23,89 @@ import Footer from "components/footer";
 import { API } from "services/api";
 import { useHeroesContext } from "contexts/heroes";
 import { Hero as HeroType } from "types/hero";
+import Loading from "components/loading";
+import { motion } from "framer-motion";
 
 const Landing: React.FC = () => {
   // Context States
-  const { heroes, setHeroes, setSelectedHero } = useHeroesContext();
+  const {
+    heroes,
+    setHeroes,
+    setSelectedHero,
+    search,
+    setSearch,
+    onlyFavorites,
+    setOnlyFavorites,
+    lexOrder,
+    setLexOrder,
+  } = useHeroesContext();
 
   // States
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(false); // Estado que controla o loading
 
-  // Params
-  const [search, setSearch] = useState("");
-  const [onlyFavorites, setOnlyFavorites] = useState(false);
-  const [lexOrder, setLexOrder] = useState(false);
+  // Methods
+  const toggleLexOrder = () => {
+    setLexOrder(!lexOrder);
+    handleSearch(null, !lexOrder);
+  };
+  function isFavorite(id: number) {
+    return localStorage.getItem(`mf-${id}`) === "true";
+  }
+
+  const handleSearch = (
+    e?: React.FormEvent<HTMLFormElement> | null,
+    applyLexOrder?: boolean | undefined
+  ) => {
+    e?.preventDefault();
+    if (applyLexOrder == undefined) applyLexOrder = lexOrder;
+    setScreenLoading(true);
+    (async () => {
+      API({
+        path: "characters",
+        params: {
+          search: search,
+          orderBy: applyLexOrder ? "name" : "-modified",
+        },
+      }).then(({ data }) => {
+        setScreenLoading(false);
+        setTotal(data.data.total);
+        setHeroes(data.data.results);
+      });
+    })();
+  };
 
   const setHero = (hero: HeroType) => {
     setSelectedHero(hero);
   };
 
+  const setScreenLoading = (loadingState: boolean) => {
+    if (loadingState) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "unset";
+    setLoading(loadingState);
+  };
+
+  // Effects
   useEffect(() => {
     if (loaded) return;
     setLoaded(true);
+    if (heroes.length > 0) {
+      setHeroes(heroes);
+      return;
+    }
     (async () => {
-      API({
-        path: "characters",
-        params: {
-          orderBy: "name",
-        },
-      }).then(({ data }) => {
-        console.log(data.data.results);
-        setHeroes(data.data.results);
-      });
+      handleSearch();
     })();
   }, [heroes]);
 
   return (
     <LandingWrapper>
+      {loading && <Loading />}
       <LandingHeader>
         <LandingLogo>
-          <img src={Logo} alt="Marvel Heroes" />
+          <motion.img src={Logo} alt="Marvel Heroes" layoutId="logo-marvel" />
           <div className="text">Search heroes</div>
         </LandingLogo>
         <div className="titles">
@@ -73,9 +116,11 @@ const Landing: React.FC = () => {
           </h2>
         </div>
       </LandingHeader>
-      <LandingSearch>
-        <label className="search-input" htmlFor="search-input">
-          <img src={SearchIcon} alt="search" />
+      <LandingSearch target="#" onSubmit={(e) => handleSearch(e)}>
+        <div className="search-input">
+          <button type="submit">
+            <img src={SearchIcon} className="search-button" alt="search" />
+          </button>
           <input
             id="search-input"
             type="text"
@@ -83,7 +128,8 @@ const Landing: React.FC = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-        </label>
+        </div>
+        <input type="submit" hidden />
       </LandingSearch>
       <SearchOptions>
         <div className="total-results">Encontrados {total} heróis</div>
@@ -94,24 +140,32 @@ const Landing: React.FC = () => {
               <span>Ordenar por nome - A/Z</span>
             </div>
 
-            <Switch value={lexOrder} setValue={setLexOrder} />
+            <Switch value={lexOrder} setValue={toggleLexOrder} />
           </div>
           <div className="filter-fav">
-            <SwitchHeart value={onlyFavorites} setValue={setOnlyFavorites} />
+            <SwitchHeart
+              value={onlyFavorites}
+              setValue={setOnlyFavorites}
+              size={25}
+            />
             <span>Somente favoritos</span>
           </div>
         </div>
       </SearchOptions>
       <HeroesList>
         {heroes.map((hero) => (
-          <Hero
-            key={hero.id}
-            id={hero.id}
-            name={hero.name}
-            image={`${hero.thumbnail.path}.${hero.thumbnail.extension}`}
-            favorite={false}
-            onClick={() => setHero(hero)}
-          />
+          <>
+            {onlyFavorites && !isFavorite(hero.id) ? null : (
+              <Hero
+                key={hero.id}
+                id={hero.id}
+                name={hero.name}
+                image={`${hero.thumbnail.path}.${hero.thumbnail.extension}`}
+                favorite={isFavorite(hero.id)}
+                onClick={() => setHero(hero)}
+              />
+            )}
+          </>
         ))}
       </HeroesList>
       <Footer />

@@ -6,13 +6,18 @@ import { SearchBarWrapper, SearchInput } from "./styles";
 import SearchIcon from "assets/images/ic_busca.svg";
 import LogoSmall from "assets/images/marvel-2.png";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const SearchBar: React.FC = () => {
   const [search, setSearch] = useState("");
   return (
     <SearchBarWrapper>
       <Link className="logo" to="/">
-        <img src={LogoSmall} alt="Marvel search heroes" />
+        <motion.img
+          src={LogoSmall}
+          alt="Marvel search heroes"
+          layoutId="logo-marvel"
+        />
         Search heroes
       </Link>
       <div className="search-bar">

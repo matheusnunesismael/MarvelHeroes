@@ -4,15 +4,12 @@ import { SwitchWrapper } from "./styles";
 
 interface SwitchProps {
   value: boolean;
-  setValue: (value: boolean) => void;
+  setValue: () => void;
 }
 
 const Switch: React.FC<SwitchProps> = (props: SwitchProps) => {
   return (
-    <SwitchWrapper
-      isActive={props.value}
-      onClick={() => props.setValue(!props.value)}
-    >
+    <SwitchWrapper isActive={!props.value} onClick={() => props.setValue()}>
       <div className="switch-button"></div>
     </SwitchWrapper>
   );
